@@ -3,7 +3,18 @@ local sounds = require("__base__.prototypes.entity.sounds")
 local item_sounds = require("__base__.prototypes.item_sounds")
 local item_tints = require("__base__.prototypes.item-tints")
 
+--Create laboratory item and entity. We will reference it later.
+require ("util")
+require ("__base__.prototypes.entity.pipecovers")
+require ("circuit-connector-sprites")
+require ("__base__.prototypes.entity.assemblerpipes")
 
+
+--Control lua handles p lab rejecting items of normal, "", nil, or common quality
+local hit_effects = require("__base__.prototypes.entity.hit-effects")
+local smoke_animations = require("__base__.prototypes.entity.smoke-animations")
+local smoke_fast_animation = smoke_animations.trivial_smoke_fast
+local trivial_smoke = smoke_animations.trivial_smoke
 
 
 local shape_code = 
@@ -76,9 +87,12 @@ end
 --HOLY COW THIS WORKS leaving it for debug
 
 --Might have to bite the bullet and not build the shape_layer object
+--Shapez lab
+
 
 local debug_mode = settings.startup["debug"].value
 local n = 1
+all_shape_names = {}
 for s in string.gmatch(stored_string, "[^%s]+") do
     --log(serpent.block(s))
     shape_layer[s] =
@@ -88,7 +102,7 @@ for s in string.gmatch(stored_string, "[^%s]+") do
         ["LL"] = string.sub(s,5,6),
         ["LU"] = string.sub(s,7,8),
     }
-
+    table.insert(all_shape_names,s)
     if(debug_mode == true) then
 
         n = n + 1
@@ -100,6 +114,146 @@ for s in string.gmatch(stored_string, "[^%s]+") do
     end
 end
 
+data:extend(
+{
+    {
+        type = "item",
+        name = "shapez-lab",
+        icon = "__shapeztorio__/graphics/icons/lab.png",
+        subgroup = "shapez",
+        order = "b",
+        inventory_move_sound = item_sounds.lab_inventory_move,
+        pick_sound = item_sounds.lab_inventory_pickup,
+        drop_sound = item_sounds.lab_inventory_move,
+        place_result = "shapez-lab",
+        stack_size = 10,
+        weight = 20*kg,
+        localised_name = {"","Shapez lab"},
+    },
+    {
+        type = "lab",
+        name = "shapez-lab",
+        localised_name = {"","Shapez lab"},
+        icon = "__shapeztorio__/graphics/icons/lab.png",
+        flags = {"placeable-player", "player-creation"},
+        minable = {mining_time = 0.2, result = "shapez-lab"},
+        fast_replaceable_group = "lab",
+        max_health = 150,
+        corpse = "lab-remnants",
+        dying_explosion = "lab-explosion",
+        collision_box = {{-1.2, -1.2}, {1.2, 1.2}},
+        selection_box = {{-1.5, -1.5}, {1.5, 1.5}},
+        damaged_trigger_effect = hit_effects.entity(),
+        on_animation =
+        {
+            layers =
+            {
+            {
+                filename = "__shapeztorio__/graphics/entity/lab-entity.png",
+                width = 194,
+                height = 174,
+                frame_count = 33,
+                line_length = 11,
+                animation_speed = 1 / 3,
+                shift = util.by_pixel(0, 1.5),
+                scale = 0.5
+            },
+            {
+                filename = "__base__/graphics/entity/lab/lab-integration.png",
+                width = 242,
+                height = 162,
+                line_length = 1,
+                repeat_count = 33,
+                animation_speed = 1 / 3,
+                shift = util.by_pixel(0, 15.5),
+                scale = 0.5
+            },
+            {
+                filename = "__shapeztorio__/graphics/entity/lab-light.png",
+                blend_mode = "additive",
+                draw_as_light = true,
+                width = 216,
+                height = 194,
+                frame_count = 33,
+                line_length = 11,
+                animation_speed = 1 / 3,
+                shift = util.by_pixel(0, 0),
+                scale = 0.5
+            },
+            {
+                filename = "__base__/graphics/entity/lab/lab-shadow.png",
+                width = 242,
+                height = 136,
+                line_length = 1,
+                repeat_count = 33,
+                animation_speed = 1 / 3,
+                shift = util.by_pixel(13, 11),
+                scale = 0.5,
+                draw_as_shadow = true
+            }
+            }
+        },
+        off_animation =
+        {
+            layers =
+            {
+            {
+                filename = "__shapeztorio__/graphics/entity/lab-entity.png",
+                width = 194,
+                height = 174,
+                shift = util.by_pixel(0, 1.5),
+                scale = 0.5
+            },
+            {
+                filename = "__base__/graphics/entity/lab/lab-integration.png",
+                width = 242,
+                height = 162,
+                shift = util.by_pixel(0, 15.5),
+                scale = 0.5
+            },
+            {
+                filename = "__base__/graphics/entity/lab/lab-shadow.png",
+                width = 242,
+                height = 136,
+                shift = util.by_pixel(13, 11),
+                draw_as_shadow = true,
+                scale = 0.5
+            }
+            }
+        },
+        working_sound =
+        {
+            sound =
+            {
+            filename = "__base__/sound/lab.ogg",
+            volume = 0.7,
+            modifiers = {volume_multiplier("main-menu", 2.2), volume_multiplier("tips-and-tricks", 0.8)},
+            audible_distance_modifier = 0.7,
+            },
+            fade_in_ticks = 4,
+            fade_out_ticks = 20
+        },
+        impact_category = "glass",
+        open_sound = sounds.lab_open,
+        close_sound = sounds.lab_close,
+        energy_source =
+        {
+            type = "electric",
+            usage_priority = "secondary-input"
+        },
+        energy_usage = "90kW",
+        researching_speed = 1,
+        inputs = all_shape_names, --easiest way to do it without iterating through everything again in data updates
+        module_slots = 2,
+        icons_positioning =
+        {
+            {inventory_index = defines.inventory.lab_modules, shift = {0, 0.9}},
+            {inventory_index = defines.inventory.lab_input, shift = {0, 0}, max_icons_per_row = 4, separation_multiplier = 1/1.1}
+        },
+    },
+}    
+)
+all_shape_names = nil --free up memory
 
 --Don't like a quad for loop. No access to the coroutine function 
 --quad for loop is crashing the engine at the prototype stage.
@@ -348,6 +502,7 @@ function layer_to_recipe(in_layer,in_shape_recipe_parameters,in_function)
     {
         type = "recipe",
         allow_productivity = false,
+        allow_quality = false,
         hide_from_player_crafting = true,
         hidden = false, 
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
@@ -424,6 +579,7 @@ function layer_to_split_recipe(in_layer,in_shape_recipe_parameters)
     {
         type = "recipe",
         allow_productivity = false,
+        allow_quality = true,
         hide_from_player_crafting = true,
         hidden = false, --hide like recycling recipes
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
@@ -463,7 +619,8 @@ function recycle_layer(in_layer)
     local out_recipe = 
     {
         type = "recipe",
-        allow_productivity = false,
+        allow_productivity = true,
+        allow_quality = true,
         hide_from_player_crafting = true,
         hidden = true, --hide like recycling recipes
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
@@ -484,7 +641,7 @@ function recycle_layer(in_layer)
         },
         name = recipe_name,
         localised_name = {"",in_name_ingredient_string .. " recycling"},
-        auto_recycle = false
+        auto_recycle = false,
     }
 
     return out_recipe
@@ -513,6 +670,7 @@ function rotate_stack_recipe(in_layer,in_shape_recipe_parameters,in_function)
         type = "recipe",
         allow_productivity = false,
         hide_from_player_crafting = true,
+        allow_quality = false,
         hidden = false, 
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
@@ -539,6 +697,8 @@ end
 
 
 local single_layer_shape = shape_layer --table.deepcopy(shape_layer)
+
+
 
 for k,v in pairs(single_layer_shape) do
     local item = 
@@ -633,6 +793,7 @@ for i,s in pairs(shape_to_paint) do
     end
 end
 
+--Recipes for CwCwCwCw and RwRwRwRw
 data:extend(
 {
     {
@@ -697,6 +858,7 @@ data:extend(
         localised_name = {"","RwRwRwRw"},
         auto_recycle = false,
     },
+    --NULL ITEM easier to have this then to check all cases for an empty item.
     {
         type = "tool",
         name = "--------",
@@ -729,3 +891,5 @@ data:extend(
     }
 }
 )
+
+
