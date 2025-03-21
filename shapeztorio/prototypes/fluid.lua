@@ -8,9 +8,10 @@ data:extend(
         default_temperature = 21,
         max_temperature = 200,
         heat_capacity = "2kJ",
-        base_color = {1, 0.13, 0},
-        flow_color = {1.4, 0.6, 0.3},
+        base_color = {1, 0.2, 0.2},
+        flow_color = {1, 0.2, 0.2},
         auto_barrel = true,
+        localised_name = "Red paint"
     },
     {
         type = "fluid",
@@ -20,9 +21,10 @@ data:extend(
         default_temperature = 21,
         max_temperature = 200,
         heat_capacity = "2kJ",
-        base_color = {0.1, 1, 0.4}, 
-        flow_color = {0, 0.3, 0.1},
+        base_color = {0.2, 1, 0.2}, 
+        flow_color = {0.2, 1, 0.2},
         auto_barrel = true,
+        localised_name = "Green paint"
     },
     {
         type = "fluid",
@@ -32,20 +34,22 @@ data:extend(
         default_temperature = 21,
         max_temperature = 200,
         heat_capacity = "2kJ",
-        base_color = {1, 0.4, 1}, 
-        flow_color = {0.3, 0.1, 0.3},
+        base_color = {0.2, 0.2, 1}, 
+        flow_color = {0.2, 0.1, 1},
         auto_barrel = true,
+        localised_name = "Blue paint"
     },
     {
         type = "fluid",
         name = "paint-w",
-        icon = "__shapeztorio__/graphics/icons/fluid/paint-b.png",
+        icon = "__shapeztorio__/graphics/icons/fluid/paint-w.png",
         subgroup = "shapez",
         default_temperature = 21,
         max_temperature = 200,
         heat_capacity = "2kJ",
-        base_color = {1, 0.4, 1}, 
-        flow_color = {0.3, 0.1, 0.3},
+        base_color = {1, 1, 1}, 
+        flow_color = {1, 1, 1},
         auto_barrel = true,
+        localised_name = "White paint"
     },
 })

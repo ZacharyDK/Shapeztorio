@@ -24,22 +24,23 @@ data:extend({
         type = "recipe-category",
         name = "rotate-180",
     },
-    --]] --Don't actually have the recipe count budge
+   
     {
         type = "recipe-category",
         name = "swapper",
     },
+     --]] --Don't actually have the recipe count budge
     {
         type = "recipe-category",
         name = "splitter-RL",
     },
     {
         type = "recipe-category",
-        name = "pseduo-stacker"
+        name = "rotate-stack-180"
     },
     {
         type = "recipe-category",
-        name = "shapez-recycling"
+        name = "rotate-stack-90-CW"
     },
     {
         type = "recipe-category",

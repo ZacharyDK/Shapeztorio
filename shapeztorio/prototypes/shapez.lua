@@ -36,8 +36,8 @@ local code_word_table =
 
 local shift_table = 
 {
-    ["RU"] = util.by_pixel(16, 16),
-    ["RL"] = util.by_pixel(16, -16),
+    ["RU"] = util.by_pixel(15, 16),
+    ["RL"] = util.by_pixel(15, -16),
     ["LL"] = util.by_pixel(-16, -16),
     ["LU"] = util.by_pixel(-16, 16),
 }
@@ -274,21 +274,20 @@ end
 
 function is_blank(in_layer,in_key)
     if(in_layer == nil or in_key == nil) then
-        return false
+        return true
     end
     return in_layer[in_key] == "--" or in_layer[in_key] == "-"
 end
 
 function pseudo_stack_quarter_layer(in_source_layer,in_target_layer,q)
-    local out = "--"
-    if (in_target_layer ~= nil) then
-        out = in_target_layer[q] -- default
-    end
-    if(is_blank(in_source_layer,q) and in_target_layer ~= nil ) then
-        out = in_target_layer[q]
-    elseif(is_blank(in_target_layer,q) and in_source_layer ~= nil) then
+    local out = in_target_layer[q]
+    --Drop the source shape ontop of the target.
+    --if any of the targets slots are blank - then it becomes the source. Otherwise it stays as the target
+    if(is_blank(in_target_layer,q) and is_blank(in_source_layer,q) == false ) then
         out = in_source_layer[q]
     end
+
+
     return out
 end
 
@@ -297,10 +296,12 @@ function pseudo_stack(in_source_layer,in_target_layer)
     local out = 
     {
         ["RU"] = pseudo_stack_quarter_layer(in_source_layer,in_target_layer,"RU"),
-        ["RL"] = pseudo_stack_quarter_layer(in_source_layer,in_target_layer,"LU"),
+        ["RL"] = pseudo_stack_quarter_layer(in_source_layer,in_target_layer,"RL"),
         ["LL"] = pseudo_stack_quarter_layer(in_source_layer,in_target_layer,"LL"),
         ["LU"] = pseudo_stack_quarter_layer(in_source_layer,in_target_layer,"LU"),
     }
+
+
     return out
 end
 
@@ -327,9 +328,9 @@ function layer_to_recipe_ingredient_or_result_table(in_layer)
     local out = 
     {
         {   
-            ["type"] = "item",
-            ["name"] = convert_layer_to_string(in_layer),
-            ["amount"] = 1,
+            type = "item",
+            name = convert_layer_to_string(in_layer),
+            amount = 1,
         },
     }
     return out
@@ -348,7 +349,7 @@ function layer_to_recipe(in_layer,in_shape_recipe_parameters,in_function)
         type = "recipe",
         allow_productivity = false,
         hide_from_player_crafting = true,
-        hidden = true, --hide like recycling recipes
+        hidden = false, 
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
         category = in_shape_recipe_parameters.category,
@@ -358,7 +359,7 @@ function layer_to_recipe(in_layer,in_shape_recipe_parameters,in_function)
         ingredients = ingredient_table,
         results = result_table,
         name = recipe_name_prefix .. in_shape_recipe_parameters.name,
-        localised_name = in_name_ingredient_string .. in_shape_recipe_parameters.name,
+        localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
     }
 
@@ -395,17 +396,18 @@ function paint_layer_to_recipe(in_layer,in_shape_recipe_parameters,in_paint_code
         type = "recipe",
         allow_productivity = false,
         hide_from_player_crafting = true,
-        hidden = true, --hide like recycling recipes
+        hidden = false, 
+        order = in_paint_code .. in_name_ingredient_string,
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
-        category = in_shape_recipe_parameters.category,
+        category = "paint",
         energy_required = in_shape_recipe_parameters.energy_required or 1,
         subgroup = "shapez",
         main_product = in_name_result_string,
         ingredients = ingredient_table,
         results = result_table,
         name = recipe_name_prefix .. in_shape_recipe_parameters.name,
-        localised_name = in_name_ingredient_string .. in_shape_recipe_parameters.name,
+        localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
     }
 
@@ -416,8 +418,6 @@ function layer_to_split_recipe(in_layer,in_shape_recipe_parameters)
     
     local result_layer_a,result_layer_b = split_single_layer_RL(in_layer)
     local ingredient_table = layer_to_recipe_ingredient_or_result_table(in_layer)
-    local result_table = layer_to_recipe_ingredient_or_result_table(result_layer_a)
-    table.insert(result_table,layer_to_recipe_ingredient_or_result_table(result_layer_b))
     local in_name_ingredient_string = convert_layer_to_string(in_layer)
     local recipe_name_prefix = in_name_ingredient_string .. "_split_RL"
     local out_recipe = 
@@ -425,17 +425,29 @@ function layer_to_split_recipe(in_layer,in_shape_recipe_parameters)
         type = "recipe",
         allow_productivity = false,
         hide_from_player_crafting = true,
-        hidden = true, --hide like recycling recipes
+        hidden = false, --hide like recycling recipes
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
-        category = in_shape_recipe_parameters.category,
+        category = "splitter-RL", 
         energy_required = in_shape_recipe_parameters.energy_required or 1,
         subgroup = "shapez",
         main_product = convert_layer_to_string(result_layer_a),
         ingredients = ingredient_table,
-        results = result_table,
+        results = 
+        {
+            {   
+                type = "item",
+                name = convert_layer_to_string(result_layer_a),
+                amount = 1,
+            },
+            {   
+                type = "item",
+                name = convert_layer_to_string(result_layer_b),
+                amount = 1,
+            },
+        },
         name = recipe_name_prefix,
-        localised_name = in_name_ingredient_string .. in_shape_recipe_parameters.name,
+        localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
     }
 
@@ -444,13 +456,7 @@ end
 function recycle_layer(in_layer)
     
     local ingredient_table = layer_to_recipe_ingredient_or_result_table(in_layer)
-    local result_table = 
-    {   
-        ["type"] = "item",
-        ["name"] = "plastic-bar",
-        ["amount"] = 1,
-        ["probability"] = 0.25,
-    }
+
 
     local in_name_ingredient_string = convert_layer_to_string(in_layer)
     local recipe_name = in_name_ingredient_string .. "-recycling"
@@ -467,10 +473,65 @@ function recycle_layer(in_layer)
         subgroup = "shapez",
         main_product = "plastic-bar",
         ingredients = ingredient_table,
-        results = result_table,
+        results = 
+        {
+            {
+                type = "item",
+                name = "plastic-bar",
+                amount = 1,
+                probability = 0.25
+            }
+        },
         name = recipe_name,
-        localised_name = in_name_ingredient_string .. " recycling",
+        localised_name = {"",in_name_ingredient_string .. " recycling"},
         auto_recycle = false
+    }
+
+    return out_recipe
+end
+
+function rotate_stack_90_CW(in_layer)
+    local rotate = rotate_single_layer_CW(in_layer)
+    return pseudo_stack(rotate,in_layer)
+end
+
+function rotate_stack_180(in_layer)
+    local rotate = rotate_single_layer_180(in_layer)
+    return pseudo_stack(rotate,in_layer)
+end
+
+function rotate_stack_recipe(in_layer,in_shape_recipe_parameters,in_function)
+    
+    local result_layer = in_function(in_layer)
+
+    local result_table = layer_to_recipe_ingredient_or_result_table(result_layer)
+    local in_name_ingredient_string = convert_layer_to_string(in_layer)
+    local in_name_result_string = convert_layer_to_string(result_layer)
+    local recipe_name_prefix = in_name_ingredient_string .. "_to_" .. in_name_result_string .. "_"
+    local out_recipe = 
+    {
+        type = "recipe",
+        allow_productivity = false,
+        hide_from_player_crafting = true,
+        hidden = false, 
+        --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
+        enabled = true,
+        category = in_shape_recipe_parameters.category,
+        energy_required = in_shape_recipe_parameters.energy_required or 1,
+        subgroup = "shapez",
+        main_product = in_name_result_string,
+        ingredients =
+        {
+            {   
+                type = "item",
+                name = convert_layer_to_string(in_layer),
+                amount = 2, --this is why we have our own function
+            },
+        },
+        results = result_table,
+        name = recipe_name_prefix .. in_shape_recipe_parameters.name,
+        localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
+        auto_recycle = false,
     }
 
     return out_recipe
@@ -490,8 +551,8 @@ for k,v in pairs(single_layer_shape) do
         icon_size = 32,
         subgroup = "shapez",
         color_hint = { text = "Y" },
-        order = "a",
-        inventory_move_sound = item_sounds.science_inventory_move,
+        order = "d",
+        inventory_move_sound = item_sounds.science_inventory_move, --consider changing to plastic sound
         pick_sound = item_sounds.science_inventory_pickup,
         drop_sound = item_sounds.science_inventory_move,
         stack_size = 200,
@@ -502,8 +563,7 @@ for k,v in pairs(single_layer_shape) do
         factoriopedia_durability_description_key = "description.factoriopedia-science-pack-remaining-amount-key",
         durability_description_value = "description.science-pack-remaining-amount-value",
         random_tint_color = item_tints.bluish_science,
-        localised_name = k,
-        auto_recycle = false 
+        --auto_recycle = false 
     }
     
 
@@ -511,16 +571,19 @@ for k,v in pairs(single_layer_shape) do
     data:extend(
     {
         item,
+
+        layer_to_recipe(v,{category = "half-destroy-1-2", energy_required = 1,name = "half_destroy_right" },half_destroy_RU_RL),
+        layer_to_recipe(v,{category = "half-destroy-3-4", energy_required = 1,name = "half_destroy_left" },half_destroy_LU_LL),
+        layer_to_recipe(v,{category = "rotate-CW-90", energy_required = 1,name = "rotate_CW_90" },rotate_single_layer_CW),
+        layer_to_recipe(v,{category = "rotate-CCW-90", energy_required = 1,name = "rotate_CCW_90" },rotate_single_layer_CCW),
+        --TODO, swapper and splitter
+        --layer_to_recipe(v,{category = "rotate-stack-180", energy_required = 1,name = "pseudo_stacker" },pseudo_stack), Need to handle seperately. Even item stacking with every other item....
+        layer_to_split_recipe(v,{category = "splitter-RL", energy_required = 1,name = "splitter_RL" }),
+        rotate_stack_recipe(v,{category = "rotate-stack-90-CW", energy_required = 1,name = "rotate_stack_90_CW" },rotate_stack_90_CW),
+        rotate_stack_recipe(v,{category = "rotate-stack-180", energy_required = 1,name = "rotate_stack_180" },rotate_stack_180),
+        recycle_layer(v)
     }
     )
-    layer_to_recipe(v,{category = "half-destroy-1-2", energy_required = 1,name = "half_destroy_right" },half_destroy_RU_RL)
-    layer_to_recipe(v,{category = "half-destroy-3-4", energy_required = 1,name = "half_destroy_left" },half_destroy_LU_LL)
-    layer_to_recipe(v,{category = "rotate-CW-90", energy_required = 1,name = "rotate_CW_90" },rotate_single_layer_CW)
-    layer_to_recipe(v,{category = "rotate-CCW-90", energy_required = 1,name = "rotate_CCW_90" },rotate_single_layer_CCW)
-    --TODO, swapper and splitter
-    layer_to_recipe(v,{category = "pseudo_stack", energy_required = 1,name = "pseudo_stack" },pseudo_stack)
-    layer_to_split_recipe(v,{category = "splitter-RL", energy_required = 1,name = "splitter-RL" })
-    recycle_layer(v)
 end
 
 local shape_to_paint = 
@@ -573,9 +636,9 @@ end
 data:extend(
 {
     {
-        allow_productivity = false,
+        allow_productivity = true,
         hide_from_player_crafting = true,
-        hidden = false, --hide like recycling recipes
+        hidden = false, 
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
         category = "shapez-creation",
@@ -600,13 +663,13 @@ data:extend(
         },
         name = "CwCwCwCw",
         type = "recipe",
-        localised_name = "CwCwCwCw",
+        localised_name = {"","CwCwCwCw"},
         auto_recycle = false
     },
     {
-        allow_productivity = false,
+        allow_productivity = true,
         hide_from_player_crafting = true,
-        hidden = false, --hide like recycling recipes
+        hidden = false, 
         --icons = data.raw["tool"][convert_layer_to_string(result_layer)].icons,
         enabled = true,
         category = "shapez-creation",
@@ -631,9 +694,38 @@ data:extend(
         },
         name = "RwRwRwRw",
         type = "recipe",
-        localised_name = "RwRwRwRw",
+        localised_name = {"","RwRwRwRw"},
         auto_recycle = false,
     },
+    {
+        type = "tool",
+        name = "--------",
+        localised_description = {"item-description.science-pack"},
+        localised_name = {"","---------"},
+        icons = 
+        {
+            {
+                icon = "__base__/graphics/icons/plastic-bar.png",
+                icon_size = 64,
+                tint = {0,0,0},
+            }
+        },
 
+        subgroup = "shapez",
+        color_hint = { text = "Y" },
+        order = "e",
+        inventory_move_sound = item_sounds.science_inventory_move,
+        pick_sound = item_sounds.science_inventory_pickup,
+        drop_sound = item_sounds.science_inventory_move,
+        stack_size = 200,
+        default_import_location = "nauvis", -- TODO
+        weight = 1*kg,
+        durability = 1,
+        durability_description_key = "description.science-pack-remaining-amount-key",
+        factoriopedia_durability_description_key = "description.factoriopedia-science-pack-remaining-amount-key",
+        durability_description_value = "description.science-pack-remaining-amount-value",
+        random_tint_color = item_tints.bluish_science,
+        --auto_recycle = false 
+    }
 }
 )
