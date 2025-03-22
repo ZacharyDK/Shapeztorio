@@ -27,7 +27,7 @@ data:extend(
     },
     {
         type = "recipe",
-        name = "transcendental-coppper",
+        name = "transcendental-copper",
         energy_required = 60,
         category = "transcendental-vortex",
         subgroup = "shapez",
@@ -127,7 +127,7 @@ data:extend(
     {
         type = "recipe",
         name = "transcendental-CwCwCwCw",
-        energy_required = 10,
+        energy_required = 15,
         category = "transcendental-vortex",
         subgroup = "shapez",
         ingredients =
@@ -148,7 +148,7 @@ data:extend(
     {
         type = "recipe",
         name = "transcendental-RwRwRwRw",
-        energy_required = 10,
+        energy_required = 15,
         category = "transcendental-vortex",
         subgroup = "shapez",
         ingredients =
@@ -185,6 +185,127 @@ data:extend(
         allow_productivity = true,
         auto_recycle = false,
         main_product = "piercing-rounds-magazine",
+        maximum_productivity = 5,
+    },
+    {
+        type = "recipe",
+        name = "transcendental-rocket",
+        energy_required = 100,
+        category = "transcendental-vortex",
+        subgroup = "shapez",
+        ingredients =
+        {
+        },
+        results = 
+        {
+            {type="item", name="rocket-fuel", probability = 0.3, amount=1},
+            {type="item", name="low-density-structure", probability = 0.4, amount=1},
+            {type="item", name="processing-unit", probability = 0.3, amount=1},
+        },
+        enabled = false,
+        localised_name = {"","Transcendental rocket parts"},
+        allow_quality = true,
+        allow_productivity = true,
+        auto_recycle = false,
+        main_product = "rocket-fuel",
+        maximum_productivity = 5,
+    },
+    {
+        type = "recipe",
+        name = "paint-r",
+        energy_required = 5,
+        category = "paint",
+        subgroup = "shapez",
+        order = "[paint]-[r]",
+        ingredients =
+        {
+            {type="fluid", name="light-oil", amount=100},
+            {type="item", name="iron-ore", amount=3},
+        },
+        results = 
+        {
+            {type="fluid", name="paint-r", amount=800},
+        },
+        enabled = false,
+        localised_name = {"","Red paint"},
+        allow_quality = false,
+        allow_productivity = true,
+        auto_recycle = false,
+        main_product = "paint-r",
+        maximum_productivity = 5,
+    },
+    {
+        type = "recipe",
+        name = "paint-g",
+        energy_required = 5,
+        category = "paint",
+        subgroup = "shapez",
+        order = "[paint]-[g]",
+        ingredients =
+        {
+            {type="fluid", name="light-oil", amount=100},
+            {type="item", name="copper-ore", amount=3},
+        },
+        results = 
+        {
+            {type="fluid", name="paint-g", amount=800},
+        },
+        enabled = false,
+        localised_name = {"","Green paint"},
+        allow_quality = false,
+        allow_productivity = true,
+        auto_recycle = false,
+        main_product = "paint-g",
+        maximum_productivity = 5,
+    },
+    {
+        type = "recipe",
+        name = "paint-b",
+        energy_required = 5,
+        category = "paint",
+        subgroup = "shapez",
+        order = "[paint]-[b]",
+        ingredients =
+        {
+            {type="fluid", name="light-oil", amount=100},
+            {type="item", name="iron-plate", amount=3},
+        },
+        results = 
+        {
+            {type="fluid", name="paint-b", amount=800},
+        },
+        enabled = false,
+        localised_name = {"","Blue paint"},
+        allow_quality = false,
+        allow_productivity = true,
+        auto_recycle = false,
+        main_product = "paint-b",
+        maximum_productivity = 5,
+    },
+    {
+        type = "recipe",
+        name = "paint-w",
+        energy_required = 5,
+        category = "paint",
+        subgroup = "shapez",
+        order = "[paint]-[w]",
+        ingredients =
+        {
+            {type="fluid", name="light-oil", amount=100},
+            {type="item", name="iron-plate", amount=1},
+            {type="item", name="iron-ore", amount=1},
+            {type="item", name="copper-ore", amount=1},
+        },
+        results = 
+        {
+            {type="fluid", name="paint-w", amount=800},
+        },
+        enabled = false,
+        localised_name = {"","White paint"},
+        allow_quality = false,
+        allow_productivity = true,
+        auto_recycle = false,
+        main_product = "paint-w",
         maximum_productivity = 5,
     },
 }
