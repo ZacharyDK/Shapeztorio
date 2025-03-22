@@ -800,7 +800,7 @@ data:extend(
       icon = "__shapeztorio__/graphics/icons/transcendental.png",
       flags = {"placeable-neutral","placeable-player", "player-creation"},
       minable = {mining_time = 0.2, result = "transcendental-creator"},
-      max_health = 400,
+      max_health = 1000,
       corpse = "assembling-machine-3-remnants",
       dying_explosion = "assembling-machine-3-explosion",
       icon_draw_specification = {shift = {0, -0.3}},
@@ -818,6 +818,7 @@ data:extend(
       open_sound = sounds.machine_open,
       close_sound = sounds.machine_close,
       impact_category = "metal",
+      perceived_performance = {minimum = 0.25, maximum = 2.2, performance_to_activity_rate = 0.8},
       working_sound =
       {
         sound = {filename = "__base__/sound/assembling-machine-t3-1.ogg", volume = 0.45, audible_distance_modifier = 0.5},
@@ -837,23 +838,25 @@ data:extend(
           layers =
           {
             {
-              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-2.png",
+              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-1.png",
               priority = "high",
               width = 360,
               height = 350,
-              frame_count = 16,
+              frame_count = 64,
               line_length = 8,
               scale = 0.5,
+              animation_speed = 0.6,
             },
             {
-              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-emission-2.png",
+              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-emission-1.png",
               priority = "high",
               width = 360,
               height = 350,
-              frame_count = 16,
+              frame_count = 64,
               line_length = 8,
               scale = 0.5,
               blend_mode = "additive",
+              animation_speed = 0.6,
             },
             {
               filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-shadow.png",
@@ -862,16 +865,17 @@ data:extend(
               height = 500,
               frame_count = 1,
               line_length = 1,
-              repeat_count = 16,
+              repeat_count = 64,
               draw_as_shadow = true,
               scale = 0.5,
+              animation_speed = 0.6, --because of faster starting crafting speed
             }
           }
         }
       },
   
       crafting_categories = {"transcendental-vortex"},
-      crafting_speed = 1,
+      crafting_speed = 1.5, --better initial starting speed ensures this benefits from speed modules more
       energy_source =
       {
         type = "electric",
@@ -879,8 +883,8 @@ data:extend(
         emissions_per_minute = { pollution = 2 }
       },
       energy_usage = "5000kW",
-      module_slots = 2,
-      allowed_effects = {"consumption", "speed", "productivity", "pollution", "quality"},
+      module_slots = 6,
+      allowed_effects = {"consumption", "speed", "pollution", "quality"},
       localised_name = {"","Transcendental creation engine"},
     },
 }
