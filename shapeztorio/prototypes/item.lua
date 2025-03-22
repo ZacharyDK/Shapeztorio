@@ -83,6 +83,7 @@ end
 
 data:extend(
 {
+    --ITEMS
     {
         type = "item",
         name = "painter-plant",
@@ -144,6 +145,23 @@ data:extend(
         place_result = "swap-box",
         weight = 20*kg,
     },
+    {
+        type = "item",
+        name = "transcendental-creator",
+        icon = "__shapeztorio__/graphics/icons/transcendental.png",
+        icon_size = 64,
+        subgroup = "shapez",
+        order = "a[transcendental-creator]",
+        inventory_move_sound = item_sounds.steam_inventory_move,
+        pick_sound = item_sounds.steam_inventory_pickup,
+        drop_sound = item_sounds.steam_inventory_move,
+        place_result = "transcendental-creator",
+        stack_size = 20,
+        default_import_location = "nauvis",
+        weight = 200 * kg,
+        localised_name = {"","Transcendental creation engine"},
+    },
+    --RECIPES
     {
         type = "recipe",
         name = "painter-plant",
@@ -244,5 +262,6 @@ data:extend(
     create_shapez_assembler_recipe({name = "rotate-stack-180",localised_name = "Rotate 180 + stack", tint = {200,50,50}}), --rgb(247, 7, 7)
     create_shapez_assembler_recipe({name = "rotate-stack-90-CW",localised_name = "Rotate 90CW + stack", tint = {63,247,7}}), --rgb(63, 247, 7)
     create_shapez_assembler_recipe({name = "swap-box",localised_name = "Swap box", tint = {200,200,200}}), --rgb(200, 200, 200)
+
 }    
 )

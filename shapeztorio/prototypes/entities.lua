@@ -190,6 +190,7 @@ end
 
 data:extend(
 {
+    --PAINTERS
     {
         type = "assembling-machine",
         name = "painter-plant",
@@ -721,6 +722,7 @@ data:extend(
           orientation_to_variation = true
         }
     },
+    --By functions
     create_tinted_assembler({name = "rotator-CW",category = {"rotate-CW-90"},localised_name = "Rotator CW", tint = {200,200,0}}),  --{r = 200, g = 200, b =0}, --rgb(200, 200, 0)
     create_tinted_assembler({name = "rotator-CCW",category = {"rotate-CCW-90"},localised_name = "Rotator CCW", tint = {175,159,55}}), --{r = 200, g = 200, b =0}, --rgb(175, 159, 55)
     create_tinted_assembler({name = "half-destroyer-L",category = {"half-destroy-3-4"},localised_name = "Left half destroyer", tint = {200,100,0}}),  --{r = 200, g = 200, b =0}, --rgb(200, 100, 0)
@@ -728,6 +730,7 @@ data:extend(
     create_tinted_assembler({name = "shapez-splitter",category = {"splitter-RL"},localised_name = "Shapez splitter", tint = {146,9,132}}), --rgb(146, 9, 132)
     create_tinted_assembler({name = "rotate-stack-180",category = {"rotate-stack-180"},localised_name = "Rotate 180 + stack", tint = {200,50,50}}), --rgb(247, 7, 7)
     create_tinted_assembler({name = "rotate-stack-90-CW",category = {"rotate-stack-90-CW"},localised_name = "Rotate 90CW + stack", tint = {63,247,7}}), --rgb(63, 247, 7)
+    --SWAP BOX
     {
       type = "container",
       name = "swap-box",
@@ -790,7 +793,96 @@ data:extend(
         }
       },
     },
+    --Transcendental
+    {
+      type = "assembling-machine",
+      name = "transcendental-creator",
+      icon = "__shapeztorio__/graphics/icons/transcendental.png",
+      flags = {"placeable-neutral","placeable-player", "player-creation"},
+      minable = {mining_time = 0.2, result = "transcendental-creator"},
+      max_health = 400,
+      corpse = "assembling-machine-3-remnants",
+      dying_explosion = "assembling-machine-3-explosion",
+      icon_draw_specification = {shift = {0, -0.3}},
+      circuit_wire_max_distance = assembling_machine_circuit_wire_max_distance,
+      circuit_connector = circuit_connector_definitions["assembling-machine"],
+      alert_icon_shift = util.by_pixel(0, -12),
+      resistances =
+      {
+        {
+          type = "fire",
+          percent = 70
+        }
+      },
 
+      open_sound = sounds.machine_open,
+      close_sound = sounds.machine_close,
+      impact_category = "metal",
+      working_sound =
+      {
+        sound = {filename = "__base__/sound/assembling-machine-t3-1.ogg", volume = 0.45, audible_distance_modifier = 0.5},
+        fade_in_ticks = 4,
+        fade_out_ticks = 20
+      },
+      collision_box = {{-2.4, -2.4}, {2.4, 2.4}},
+      selection_box = {{-2.5, -2.5}, {2.5, 2.5}},
+      damaged_trigger_effect = hit_effects.entity(),
+      drawing_box_vertical_extension = 0.4,
+      fast_replaceable_group = "assembling-machine",
+      graphics_set =
+      {
+        --animation_progress = 0.5, --                     
+        animation =
+        {
+          layers =
+          {
+            {
+              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-2.png",
+              priority = "high",
+              width = 360,
+              height = 350,
+              frame_count = 16,
+              line_length = 8,
+              scale = 0.5,
+            },
+            {
+              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-animation-emission-2.png",
+              priority = "high",
+              width = 360,
+              height = 350,
+              frame_count = 16,
+              line_length = 8,
+              scale = 0.5,
+              blend_mode = "additive",
+            },
+            {
+              filename = "__shapeztorio__/graphics/entity/transcendental/convector-hr-shadow.png",
+              priority = "high",
+              width = 600,
+              height = 500,
+              frame_count = 1,
+              line_length = 1,
+              repeat_count = 16,
+              draw_as_shadow = true,
+              scale = 0.5,
+            }
+          }
+        }
+      },
+  
+      crafting_categories = {"transcendental-vortex"},
+      crafting_speed = 1,
+      energy_source =
+      {
+        type = "electric",
+        usage_priority = "secondary-input",
+        emissions_per_minute = { pollution = 2 }
+      },
+      energy_usage = "5000kW",
+      module_slots = 2,
+      allowed_effects = {"consumption", "speed", "productivity", "pollution", "quality"},
+      localised_name = {"","Transcendental creation engine"},
+    },
 }
 )
 

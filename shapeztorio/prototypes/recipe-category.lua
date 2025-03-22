@@ -45,5 +45,10 @@ data:extend({
     {
         type = "recipe-category",
         name = "shapez-creation"
-    }
+    },
+    {
+        type = "recipe-category",
+        name = "transcendental-vortex"
+    },
+
 })

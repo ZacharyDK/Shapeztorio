@@ -11,7 +11,7 @@ data:extend(
         base_color = {1, 0.2, 0.2},
         flow_color = {1, 0.2, 0.2},
         auto_barrel = true,
-        localised_name = "Red paint"
+        localised_name = {"","Red paint"},
     },
     {
         type = "fluid",
@@ -24,7 +24,7 @@ data:extend(
         base_color = {0.2, 1, 0.2}, 
         flow_color = {0.2, 1, 0.2},
         auto_barrel = true,
-        localised_name = "Green paint"
+        localised_name = {"","Green paint"},
     },
     {
         type = "fluid",
@@ -37,7 +37,7 @@ data:extend(
         base_color = {0.2, 0.2, 1}, 
         flow_color = {0.2, 0.1, 1},
         auto_barrel = true,
-        localised_name = "Blue paint"
+        localised_name = {"","Blue paint"},
     },
     {
         type = "fluid",
@@ -50,6 +50,6 @@ data:extend(
         base_color = {1, 1, 1}, 
         flow_color = {1, 1, 1},
         auto_barrel = true,
-        localised_name = "White paint"
+        localised_name = {"","White paint"},
     },
 })

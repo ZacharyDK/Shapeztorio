@@ -113,7 +113,7 @@ for s in string.gmatch(stored_string, "[^%s]+") do
 
     end
 end
-
+--SHAPEZ-LAB
 data:extend(
 {
     {
@@ -250,6 +250,22 @@ data:extend(
             {inventory_index = defines.inventory.lab_modules, shift = {0, 0.9}},
             {inventory_index = defines.inventory.lab_input, shift = {0, 0}, max_icons_per_row = 4, separation_multiplier = 1/1.1}
         },
+    },
+    {
+        type = "recipe",
+        name = "shapez-lab",
+        energy_required = 4,
+        category = "basic-crafting",
+        ingredients =
+        {
+          {type = "item", name = "lab", amount = 1},
+          {type = "item", name = "inserter", amount = 1},
+          {type = "item", name = "fast-transport-belt", amount = 4}
+        },
+        results = {{type="item", name="shapez-lab", amount=1}},
+        enabled = false,
+        localised_name = {"","Shapez lab"},
+        allow_quality = true,
     },
 }    
 )
