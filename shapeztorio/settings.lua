@@ -4,8 +4,17 @@ data:extend({
         name = "debug",
         setting_type = "startup",
         default_value = false,
+        hidden = true,
     },
-    
+    {
+        type = "int-setting",
+        name = "shapez-random-seed",
+        setting_type = "startup",
+        default_value = 0,
+        minimum_value = 0,
+        maximum_value = 2147483647,
+        order = "b",
+    },
     {
         type = "string-setting",
         name = "shape-layers",
