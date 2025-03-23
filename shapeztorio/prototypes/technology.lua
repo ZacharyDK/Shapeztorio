@@ -10,24 +10,21 @@ function pick_random_full_shape()
 end
 
 function pick_quarter_shape()
-    local pre_quarter = math.random(0,3)
-    local post_quarter = 3 - pre_quarter
-    local pre_quarter_string = ""
-    local post_quarter_string = ""
-    local i = 1
-    while i <  pre_quarter do
-        pre_quarter_string = pre_quarter_string .. "--"
-        i = i + 1
+    local n = math.random(1, 4)
+    local a = pick_random_quarter()
+    if(n == 1) then
+        return a .. "--" .. "--" .. "--"
+    elseif(n == 2) then
+        return "--" .. a .. "--" .. "--"
+    elseif(n == 3) then
+        return "--" .. "--" .. a .. "--"
+    elseif(n == 4) then
+        return "--" .. "--" .. "--" .. a
     end
 
-    local j = 1
-    while j <  post_quarter do
-        post_quarter_string = post_quarter_string .. "--"
-        j = j + 1
-    end
 
-    return pre_quarter_string .. pick_random_quarter() .. post_quarter_string
 
+    return "--" .. "--" .. "--" .. "--" --will cause an error, null shape isn't added to the lab
 end
 
 function pick_pattern_shape()
@@ -37,6 +34,37 @@ function pick_pattern_shape()
     return a .. b .. a .. b
 
 end
+
+function pick_null_pattern_shape_a()
+    local a = pick_random_quarter()
+
+    return a .. "--" .. a .. "--"
+
+end
+
+function pick_null_pattern_shape_b()
+    local b= pick_random_quarter()
+
+    return "--" .. b .. "--" .. b 
+
+end
+
+function pick_half_pattern_R()
+    local a = pick_random_quarter()
+    local b = pick_random_quarter()
+
+    return a .. b .. "--" .. "--"
+
+end
+
+function pick_half_pattern_L()
+    local a = pick_random_quarter()
+    local b = pick_random_quarter()
+
+    return  "--" .. "--" .. a .. b
+
+end
+
 
 function pick_full_symmetrical_shape()
     local a = pick_random_quarter()
@@ -70,6 +98,34 @@ function create_shapes_technology_ingredient_array(in_params)
     if((in_params.symmetrical_shape or 0) >= 1) then 
         for i =1,in_params.symmetrical_shape do
             local a = pick_full_symmetrical_shape()
+            prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
+        end
+    end
+
+    if((in_params.pattern_null_a or 0) >= 1) then 
+        for i =1,in_params.pattern_null_a do
+            local a = pick_null_pattern_shape_a()
+            prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
+        end
+    end
+
+    if((in_params.pattern_null_b or 0) >= 1) then 
+        for i =1,in_params.pattern_null_b do
+            local a = pick_null_pattern_shape_b()
+            prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
+        end
+    end
+
+    if((in_params.half_shape_r or 0) >= 1) then 
+        for i =1,in_params.half_shape_r do
+            local a = pick_half_pattern_R()
+            prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
+        end
+    end
+
+    if((in_params.half_shape_l or 0) >= 1) then 
+        for i =1,in_params.half_shape_l do
+            local a = pick_half_pattern_L()
             prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
         end
     end
@@ -175,7 +231,7 @@ data:extend(
         name = "operator-level-1",
         icon = "__shapeztorio__/graphics/shapezlogo.png",
         icon_size = 128,
-        essential = true, --transcendental-RwRwRwRw
+        essential = true, 
         effects =
         {
             {
@@ -205,7 +261,7 @@ data:extend(
         name = "operator-level-2",
         icon = "__shapeztorio__/graphics/shapezlogo.png",
         icon_size = 128,
-        essential = true, --transcendental-RwRwRwRw
+        essential = true, 
         effects =
         {
             {
@@ -235,7 +291,7 @@ data:extend(
         name = "operator-level-3",
         icon = "__shapeztorio__/graphics/shapezlogo.png",
         icon_size = 128,
-        essential = true, --transcendental-RwRwRwRw
+        essential = true, 
         effects =
         {
             {
@@ -261,7 +317,7 @@ data:extend(
         name = "operator-level-4",
         icon = "__shapeztorio__/graphics/shapezlogo.png",
         icon_size = 128,
-        essential = true, --transcendental-RwRwRwRw
+        essential = true, 
         effects =
         {
             {
@@ -278,9 +334,209 @@ data:extend(
         unit =
         {
           count = 250,
-          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 1,full_shape_random = 4}),
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 1,full_shape_random = 4, quarter_shape = 1}),
           time = 60
         }
+    },
+    {
+        type = "technology",
+        name = "operator-level-5",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = "transcendental-factory",
+            },
+            {
+                type = "give-item",
+                item = "transcendental-creator"
+            }
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-4"},
+        unit =
+        {
+          count = 300,
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 1,full_shape_random = 4, quarter_shape = 1, symmetrical_shape = 1}),
+          time = 60
+        }
+    },
+    {
+        type = "technology",
+        name = "operator-level-6",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = "transcendental-power",
+            },
+            {
+                type = "give-item",
+                item = "transcendental-creator"
+            }
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-5"},
+        unit =
+        {
+          count = 350,
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 4, quarter_shape = 1, symmetrical_shape = 1}),
+          time = 60
+        }
+    },
+    {
+        type = "technology",
+        name = "operator-level-7",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = "transcendental-process",
+            },
+            {
+                type = "give-item",
+                item = "transcendental-creator"
+            }
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-6"},
+        unit =
+        {
+          count = 500,
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1}),
+          time = 60
+        }
+    },
+    {
+        type = "technology",
+        name = "operator-level-8",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = "transcendental-ammo",
+            },
+            {
+                type = "give-item",
+                item = "transcendental-creator"
+            }
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-7"},
+        unit =
+        {
+          count = 600,
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1}),
+          time = 60
+        }
+    },
+    {
+        type = "technology",
+        name = "operator-level-9",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "unlock-recipe",
+                recipe = "transcendental-rocket",
+            },
+            {
+                type = "give-item",
+                item = "transcendental-creator"
+            }
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-8"},
+        unit =
+        {
+          count = 700,
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1, half_shape_r = 1, half_shape_l = 1}),
+          time = 60
+        }
+    },
+    {
+        type = "technology",
+        name = "operator-level-10",
+        icon = "__shapeztorio__/graphics/shapezlogo.png",
+        icon_size = 128,
+        essential = true,
+        effects =
+        {
+            {
+                type = "give-item",
+                item = "transcendental-creator",
+                count = 2
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-iron",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-copper",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-factory",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-power",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-process",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-CwCwCwCw",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-RwRwRwRw",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-ammo",
+                change = 0.15
+            },
+            {
+                type = "change-recipe-productivity",
+                recipe = "transcendental-rocket",
+                change = 0.15
+            },
+  
+        },
+        prerequisites = {"shapez-discovery","operator-level-9"},
+        unit =
+        {
+          count_formula = "L*1000",
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 3,full_shape_random = 3, quarter_shape = 3, symmetrical_shape = 1, pattern_null_a = 2, pattern_null_b = 2, half_shape_r = 2, half_shape_l = 2}),
+          time = 60
+        },
+        max_level = "infinite",
+        upgrade = true,
     },
     
 })

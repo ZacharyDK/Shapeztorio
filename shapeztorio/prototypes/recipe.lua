@@ -210,6 +210,7 @@ data:extend(
         main_product = "rocket-fuel",
         maximum_productivity = 5,
     },
+    --PAINT
     {
         type = "recipe",
         name = "paint-r",
