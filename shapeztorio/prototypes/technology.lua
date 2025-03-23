@@ -22,7 +22,24 @@ function pick_quarter_shape()
         return "--" .. "--" .. "--" .. a
     end
 
+    return "--" .. "--" .. "--" .. "--" --will cause an error, null shape isn't added to the lab
+end
 
+
+function pick_three_quarter_shape()
+    local n = math.random(1, 4)
+    local a = pick_random_quarter()
+    local b = pick_random_quarter()
+    local c = pick_random_quarter()
+    if(n == 1) then
+        return a .. b .. c .. "--"
+    elseif(n == 2) then
+        return "--" .. a .. b .. c
+    elseif(n == 3) then
+        return c .. "--" .. a .. b
+    elseif(n == 4) then
+        return b .. c .. "--" .. a
+    end
 
     return "--" .. "--" .. "--" .. "--" --will cause an error, null shape isn't added to the lab
 end
@@ -126,6 +143,13 @@ function create_shapes_technology_ingredient_array(in_params)
     if((in_params.half_shape_l or 0) >= 1) then 
         for i =1,in_params.half_shape_l do
             local a = pick_half_pattern_L()
+            prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
+        end
+    end
+
+    if((in_params.three_quarter_shape or 0) >= 1) then 
+        for i =1,in_params.three_quarter_shape do
+            local a = pick_three_quarter_shape()
             prelim_out[a] = a --Creating a k,v table any copies will override the existing value in the array. Cannot have repeats on the out array
         end
     end
@@ -438,7 +462,7 @@ data:extend(
         unit =
         {
           count = 600,
-          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1}),
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 2, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1, three_quarter_shape = 1}),
           time = 60
         }
     },
@@ -464,7 +488,7 @@ data:extend(
         unit =
         {
           count = 700,
-          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1, half_shape_r = 1, half_shape_l = 1}),
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 2, quarter_shape = 1, symmetrical_shape = 1, pattern_null_a = 1, pattern_null_b = 1, half_shape_r = 1, half_shape_l = 1, three_quarter_shape = 1}),
           time = 60
         }
     },
@@ -532,7 +556,7 @@ data:extend(
         unit =
         {
           count_formula = "L*1000",
-          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 3,full_shape_random = 3, quarter_shape = 3, symmetrical_shape = 1, pattern_null_a = 2, pattern_null_b = 2, half_shape_r = 2, half_shape_l = 2}),
+          ingredients = create_shapes_technology_ingredient_array({pattern_shape = 2,full_shape_random = 3, quarter_shape = 2, symmetrical_shape = 1, pattern_null_a = 2, pattern_null_b = 2, half_shape_r = 2, half_shape_l = 2, three_quarter_shape = 2}),
           time = 60
         },
         max_level = "infinite",

@@ -785,13 +785,6 @@ data:extend(
       },
       circuit_connector = circuit_connector_definitions["chest"],
       circuit_wire_max_distance = default_circuit_wire_max_distance,
-      surface_conditions =
-      {
-        {
-          property = "gravity",
-          min = 0.1
-        }
-      },
     },
     --Transcendental
     {
