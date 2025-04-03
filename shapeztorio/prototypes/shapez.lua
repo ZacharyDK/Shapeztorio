@@ -532,6 +532,7 @@ function layer_to_recipe(in_layer,in_shape_recipe_parameters,in_function)
         name = recipe_name_prefix .. in_shape_recipe_parameters.name,
         localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
+        hidden_in_factoriopedia = true, --Lag reduction
     }
 
     return out_recipe
@@ -580,6 +581,7 @@ function paint_layer_to_recipe(in_layer,in_shape_recipe_parameters,in_paint_code
         name = recipe_name_prefix .. in_shape_recipe_parameters.name,
         localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
+        hidden_in_factoriopedia = true, --Lag reduction
     }
 
     return out_recipe
@@ -621,6 +623,7 @@ function layer_to_split_recipe(in_layer,in_shape_recipe_parameters)
         name = recipe_name_prefix,
         localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
+        hidden_in_factoriopedia = true, --Lag reduction
     }
 
     return out_recipe
@@ -658,6 +661,7 @@ function recycle_layer(in_layer)
         name = recipe_name,
         localised_name = {"",in_name_ingredient_string .. " recycling"},
         auto_recycle = false,
+        hidden_in_factoriopedia = true, --Lag reduction
     }
 
     return out_recipe
@@ -706,6 +710,7 @@ function rotate_stack_recipe(in_layer,in_shape_recipe_parameters,in_function)
         name = recipe_name_prefix .. in_shape_recipe_parameters.name,
         localised_name = {"",in_name_ingredient_string .. in_shape_recipe_parameters.name},
         auto_recycle = false,
+        hidden_in_factoriopedia = true, --Lag reduction
     }
 
     return out_recipe

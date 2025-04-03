@@ -1,4 +1,14 @@
 ---------------------------------------------------------------------------------------------------
+Version: 1.0.2
+Date: 4. 1. 2025
+  Major Features:
+    - Version number change to hopefully allow me to join the comfy server...
+---------------------------------------------------------------------------------------------------
+Version: 1.0.1
+Date: 4. 1. 2025
+  Major Features:
+    - Shapez recipes hidden in Factoriopedia, because it lags it.
+---------------------------------------------------------------------------------------------------
 Version: 1.0.0
 Date: 4. 1. 2025
   Major Features:
